@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skibidi67 Client — Pobierz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Russo+One&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    min-height:100vh;
+    background: linear-gradient(-45deg, #000000, #1a0000, #3a0000, #000000);
+    background-size: 400% 400%;
+    animation: bgShift 14s ease infinite;
+    color:#fff;
+    font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  @keyframes bgShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* animated moving grid overlay */
+  .grid-overlay {
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,30,30,0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,30,30,0.12) 1px, transparent 1px);
+    background-size: 55px 55px;
+    animation: gridMove 18s linear infinite;
+    mask-image: radial-gradient(circle at 50% 40%, black 10%, transparent 75%);
+  }
+  @keyframes gridMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 55px 110px; }
+  }
+
+  /* floating embers */
+  .ember {
+    position:fixed;
+    bottom:-20px;
+    border-radius:50%;
+    background: radial-gradient(circle, #ff5b3b, #7a0000 70%);
+    opacity:0.7;
+    z-index:0;
+    pointer-events:none;
+    animation-name: rise;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0); opacity:0; }
+    10%  { opacity:0.8; }
+    100% { transform: translateY(-110vh) translateX(var(--drift, 40px)); opacity:0; }
+  }
+
+  /* subtle animated glow blobs in background */
+  .glow {
+    position:fixed;
+    border-radius:50%;
+    filter: blur(120px);
+    opacity:0.35;
+    z-index:0;
+    pointer-events:none;
+  }
+  .glow.one { width:500px; height:500px; background:#ff0000; top:-150px; left:-150px; animation: float1 10s ease-in-out infinite; }
+  .glow.two { width:400px; height:400px; background:#8a0000; bottom:-120px; right:-120px; animation: float2 12s ease-in-out infinite; }
+
+  @keyframes float1 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(40px, 30px); }
+  }
+  @keyframes float2 {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(-30px, -40px); }
+  }
+
+  .container {
+    position:relative;
+    z-index:1;
+    padding: 40px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+    max-width:700px;
+  }
+
+  .fade-item {
+    opacity:0;
+    transform: translateY(-30px);
+    animation: fadeDown 0.8s ease forwards;
+  }
+  .fade-item:nth-child(1){ animation-delay:0.1s; }
+  .fade-item:nth-child(2){ animation-delay:0.35s; }
+  .fade-item:nth-child(3){ animation-delay:0.6s; }
+  .fade-item:nth-child(4){ animation-delay:0.9s; }
+
+  @keyframes fadeDown {
+    from { opacity:0; transform: translateY(-30px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  .logo {
+    font-family: 'Russo One', 'Rajdhani', sans-serif;
+    font-size:3.1rem;
+    font-weight:400;
+    letter-spacing:3px;
+    color:#ffffff;
+    animation: fadeDown 0.8s ease forwards, pulseGlow 3s ease-in-out infinite;
+    text-shadow:
+      0 0 10px rgba(255,255,255,0.5),
+      0 0 25px rgba(255,40,40,0.6),
+      0 0 55px rgba(255,20,20,0.4);
+  }
+  @keyframes pulseGlow {
+    0%,100% {
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.5),
+        0 0 25px rgba(255,40,40,0.6),
+        0 0 55px rgba(255,20,20,0.4);
+    }
+    50% {
+      text-shadow:
+        0 0 16px rgba(255,255,255,0.75),
+        0 0 40px rgba(255,60,60,0.85),
+        0 0 80px rgba(255,20,20,0.6);
+    }
+  }
+
+  .subtitle {
+    font-family:'Rajdhani', sans-serif;
+    font-weight:600;
+    font-size:1.2rem;
+    letter-spacing:0.3px;
+    color:#e6b8b8;
+    max-width:560px;
+    line-height:1.5;
+  }
+
+  .subtitle b { color:#ff5c5c; }
+
+  .download-btn {
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding: 22px 60px;
+    font-size:1.4rem;
+    font-weight:700;
+    color:#fff;
+    text-decoration:none;
+    border:none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff1f1f, #7a0000);
+    box-shadow: 0 8px 25px rgba(255,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+    cursor:pointer;
+    transition: transform 0.15s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    overflow:hidden;
+  }
+
+  .download-btn::before {
+    content:"";
+    position:absolute;
+    top:0; left:-75%;
+    width:50%; height:100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform: skewX(-25deg);
+    transition: left 0.6s ease;
+  }
+
+  .download-btn:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 14px 35px rgba(255,20,20,0.65), inset 0 1px 0 rgba(255,255,255,0.25);
+    filter: brightness(1.1);
+  }
+
+  .download-btn:hover::before {
+    left: 130%;
+  }
+
+  .download-btn:active {
+    transform: translateY(0px) scale(0.94);
+    box-shadow: 0 4px 12px rgba(255,0,0,0.4), inset 0 2px 6px rgba(0,0,0,0.3);
+    filter: brightness(0.9);
+  }
+
+  .arrow {
+    font-size:1.3rem;
+    transition: transform 0.25s ease;
+  }
+  .download-btn:hover .arrow {
+    transform: translateY(4px);
+  }
+
+  .info {
+    font-size:0.85rem;
+    color:#8f6a6a;
+    margin-top:6px;
+  }
+
+  footer {
+    position:relative;
+    z-index:1;
+    margin-top:60px;
+    font-size:0.8rem;
+    color:#6b4a4a;
+    opacity:0;
+    animation: fadeDown 0.8s ease forwards;
+    animation-delay:1.2s;
+  }
+
+  @media (max-width:480px){
+    .logo{ font-size:2.1rem; }
+    .download-btn{ padding:18px 34px; font-size:1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="grid-overlay"></div>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+  <div id="embers"></div>
+
+  <div class="container">
+    <div class="logo fade-item">SKIBIDI67 CLIENT</div>
+
+    <p class="subtitle fade-item">
+      Strona, na której pobierzesz clienta <b>Skibidi67</b> do Minecraft.
+      Kliknij przycisk poniżej, aby rozpocząć pobieranie.
+    </p>
+
+    <a class="download-btn fade-item" id="downloadBtn" href="./Skibidi67_Client_Setup_1_0_0.exe" download>
+      <span>Pobierz</span>
+      <span class="arrow">⬇</span>
+    </a>
+
+    <div class="info fade-item">Plik .exe • Setup 1.0.0</div>
+  </div>
+
+  <footer>Skibidi67 Client — nieoficjalny modyfikator do Minecraft</footer>
+
+  <script>
+    // generate floating embers in the background
+    const emberContainer = document.getElementById('embers');
+    const emberCount = 22;
+    for (let i = 0; i < emberCount; i++) {
+      const ember = document.createElement('div');
+      ember.className = 'ember';
+      const size = Math.random() * 5 + 2;
+      ember.style.width = size + 'px';
+      ember.style.height = size + 'px';
+      ember.style.left = Math.random() * 100 + 'vw';
+      const duration = Math.random() * 8 + 6;
+      ember.style.animationDuration = duration + 's';
+      ember.style.animationDelay = (Math.random() * duration) + 's';
+      ember.style.setProperty('--drift', (Math.random() * 80 - 40) + 'px');
+      emberContainer.appendChild(ember);
+    }
+  </script>
+
+</body>
+</html>
